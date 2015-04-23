@@ -1,0 +1,21 @@
+{
+    "name": "hashworks/phergie-user-watch-plugin",
+    "description": "Phergie plugin to watch and handle users.",
+    "keywords": [ "phergie", "irc", "bot", "plugin", "whois", "join", "part", "watch" ],
+    "license": "GNU GPL v3.0",
+    "support": {
+        "email": "admin@hashworks.net",
+        "irc": "irc://irc.freenode.net/phergie",
+        "issues": "https://github.com/hashworks/PhergieUserWatch/issues",
+        "source": "https://github.com/hashworks/PhergieUserWatch"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "phergie/phergie-irc-bot-react": "~1"
+    },
+    "autoload": {
+        "psr-4": {
+            "hashworks\\Phergie\\Plugin\\UserWatch\\": "src"
+        }
+    }
+}
