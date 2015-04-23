@@ -26,7 +26,7 @@ The configuration allows you to set up to 3 callbacks: joinCallback, partCallbac
 // Simple example, give voice to every user who joins the channel.
 new \hashworks\Phergie\Plugin\UserWatch\Plugin(array(
                 'joinCallback' => function(\hashworks\Phergie\Plugin\UserWatch\User $user) {
-                    $user->setChannelMode('+v', $whoisResult->getNick());
+                    $user->setChannelMode('+v', $user->getNick());
                 }
         )
 )
