@@ -155,27 +155,39 @@ class User {
 	 * @link http://docs.dal.net/docs/modes.html#2
 	 * @param string $mode
 	 * @param string $param = null
+	 * @param string $channel = null
 	 */
-	public function setChannelMode($mode, $param = null) {
-		$this->queue->ircMode($this->event->getSource(), $mode, $param);
+	public function setChannelMode($mode, $param = null, $channel = null) {
+		if ($channel === null) {
+			$channel = $this->event->getSource();
+		}
+		$this->queue->ircMode($channel, $mode, $param);
 	}
 
 	/**
 	 * Kicks the user out of the channel.
 	 *
 	 * @param string $comment = null
+	 * @param string $channel = null
 	 */
-	public function kick($comment = null) {
-		$this->queue->ircKick($this->event->getSource(), $this->nick, $comment);
+	public function kick($comment = null, $channel = null) {
+		if ($channel === null) {
+			$channel = $this->event->getSource();
+		}
+		$this->queue->ircKick($channel, $this->nick, $comment);
 	}
 
 	/**
 	 * Send a PRIVMSG to the channel.
 	 *
 	 * @param string $privmsg
+	 * @param string $channel = null
 	 */
-	public function privmsgChannel($privmsg) {
-		$this->queue->ircPrivmsg($this->event->getSource(), $privmsg);
+	public function privmsgChannel($privmsg, $channel = null) {
+		if ($channel === null) {
+			$channel = $this->event->getSource();
+		}
+		$this->queue->ircPrivmsg($channel, $privmsg);
 	}
 
 	/**
@@ -191,9 +203,13 @@ class User {
 	 * Send a NOTICE to the channel.
 	 *
 	 * @param string $message
+	 * @param string $channel = null
 	 */
-	public function noticeChannel($message) {
-		$this->queue->ircNotice($this->event->getSource(), $message);
+	public function noticeChannel($message, $channel = null) {
+		if ($channel === null) {
+			$channel = $this->event->getSource();
+		}
+		$this->queue->ircNotice($channel, $message);
 	}
 
 	/**
