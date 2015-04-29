@@ -68,18 +68,20 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface {
 	 * @param callable $callback
 	 */
 	public function handle(Event $event, Queue $queue, callable $callback) {
-		$nick = $event->getNick();
+		if (is_callable($callback)) {
+			$nick = $event->getNick();
 
-		if (empty($nick) || $nick == $event->getConnection()->getNickname()) {
-			// Don't handle our own
-			return;
+			if (empty($nick) || $nick == $event->getConnection()->getNickname()) {
+				// Don't handle our own
+				return;
+			}
+
+			$user = new User($event, $queue, $this->emitter, $this->loop);
+			$user->setNick($nick);
+			$user->setUsername($event->getUsername());
+			$user->setHost($event->getHost());
+			$callback($user);
 		}
-
-		$user = new User($event, $queue, $this->emitter, $this->loop);
-		$user->setNick($nick);
-		$user->setUsername($event->getUsername());
-		$user->setHost($event->getHost());
-		$callback($user);
 	}
 
 	/**
