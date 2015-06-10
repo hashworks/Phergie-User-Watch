@@ -67,7 +67,7 @@ class User {
 	public function queueWhois(callable $sucessCallback, callable $errorCallback = NULL) {
 		$nick = $this->getNick();
 		if (!empty($nick)) {
-			$this->queue->ircWhois('', $nick);
+			$this->queue->ircWhois($nick);
 
 			$whoisUserListener = function (ServerEvent $event) use ($sucessCallback, $errorCallback) {
 				$this->setServer($event->getServername());
