@@ -1,6 +1,6 @@
 # PhergieUserWatch
 
-[Phergie](http://github.com/phergie/phergie-irc-bot-react/) plugin to watch joins, parts and quits of users.
+[Phergie](http://github.com/phergie/phergie-irc-bot-react/) plugin to watch joins, parts and quits of users. You can also whois users easily.
 
 ## About
 
