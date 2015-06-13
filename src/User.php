@@ -75,25 +75,44 @@ class User {
 					$this->setRealname($event->getParams()[6]);
 				}
 				$listeners = array(
-						'irc.received.307' => function (ServerEvent $event) {
+						'irc.received.307' => function (ServerEvent $event) use (&$listeners) {
+							if (isset($event->getParams()[1]) && $this->getNick() != $event->getParams()[1]) {
+								$this->emitter->once('irc.received.307', $listeners['irc.received.307']);
+								return;
+							}
 							if (strpos($event->getMessage(), 'identi') !== false || strpos($event->getMessage(), 'regist') !== false) {
 								$this->setIdentified(true);
 							}
 						}, // 307 [rpl_whoisregnick, not RFC standard]
-						'irc.received.rpl_whoisserver' => function (ServerEvent $event) {
+						'irc.received.rpl_whoisserver' => function (ServerEvent $event) use (&$listeners) {
+							if (isset($event->getParams()[1]) && $this->getNick() != $event->getParams()[1]) {
+								$this->emitter->once('irc.received.rpl_whoisserver', $listeners['irc.received.rpl_whoisserver']);
+								return;
+							}
 							if (isset($event->getParams()[3])) {
 								$this->setServer($event->getParams()[3]);
 							}
 						}, // 312
-						'irc.received.rpl_whoisoperator' => function () {
+						'irc.received.rpl_whoisoperator' => function (ServerEvent $event) use (&$listeners) {
+							if (isset($event->getParams()[1]) && $this->getNick() != $event->getParams()[1]) {
+								$this->emitter->once('irc.received.rpl_whoisoperator', $listeners['irc.received.rpl_whoisoperator']);
+								return;
+							}
 							$this->setIrcOperator(true);
 						}, // 313
-						'irc.received.rpl_whoischannels' => function (ServerEvent $event) {
+						'irc.received.rpl_whoischannels' => function (ServerEvent $event) use (&$listeners) {
+							if (isset($event->getParams()[1]) && $this->getNick() != $event->getParams()[1]) {
+								return; // It is called with 'on' anyway
+							}
 							if (isset($event->getParams()[2])) {
 								$this->setChannels(explode(' ', $event->getParams()[2]));
 							}
 						}, // 319
-						'irc.received.671' => function (ServerEvent $event) {
+						'irc.received.671' => function (ServerEvent $event) use (&$listeners) {
+							if (isset($event->getParams()[1]) && $this->getNick() != $event->getParams()[1]) {
+								$this->emitter->once('irc.received.671', $listeners['irc.received.671']);
+								return;
+							}
 							if (strpos($event->getMessage(), 'secure') !== false) {
 								$this->setSecureConnection(true);
 							}
@@ -109,15 +128,24 @@ class User {
 					}
 				}
 
-				$this->emitter->once('irc.received.rpl_endofwhois', function () use ($listeners, $sucessCallback) {
-					foreach ($listeners as $event => $listener) {
-						$this->emitter->removeListener($event, $listener);
+				$endOfWhois = function (ServerEvent $event) use ($listeners, $sucessCallback, &$endOfWhois) {
+					if (isset($event->getParams()[1]) && $this->getNick() != $event->getParams()[1]) {
+						$this->emitter->once('irc.received.rpl_endofwhois', $endOfWhois);
+						return;
+					}
+					foreach ($listeners as $eventKey => $listener) {
+						$this->emitter->removeListener($eventKey, $listener);
 					}
 					$sucessCallback();
-				}); // 318
+				};
+				$this->emitter->once('irc.received.rpl_endofwhois', $endOfWhois); // 318
 			};
 
-			$noSuchNickListener = function () use ($whoisUserListener, $errorCallback) {
+			$noSuchNickListener = function (ServerEvent $event) use ($whoisUserListener, $errorCallback, &$noSuchNickListener) {
+				if (isset($event->getParams()[1]) && $this->getNick() != $event->getParams()[1]) {
+					$this->emitter->once('irc.received.rpl_whoisuser', $noSuchNickListener);
+					return;
+				}
 				$this->emitter->removeListener('irc.received.rpl_whoisuser', $whoisUserListener);
 				if ($errorCallback !== NULL) {
 					$errorCallback();
