@@ -67,7 +67,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface {
 	 * @param Queue $queue
 	 * @param callable $callback
 	 */
-	public function handle(Event $event, Queue $queue, callable $callback) {
+	public function handle(Event $event, Queue $queue, $callback) {
 		if (is_callable($callback)) {
 			$nick = $event->getNick();
 
