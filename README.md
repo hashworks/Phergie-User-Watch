@@ -4,12 +4,12 @@
 
 ## About
 
-This plugin was originally written to keep the growing amount of chan-whore-monitoring-bots in the Rizon network out of channels.
-However you can do what you want with result, it'll require a bit of PHP knowledge trough.
+This plugin was originally written to keep the growing amount of monitoring-bots in the Rizon network out of channels.
+However you can do what you want with the callbacks, it'll require a bit of PHP knowledge though.
 
 ## Install
 
-To install via [Composer](http://getcomposer.org/), use the command below, it will automatically detect the latest version and bind it with `~`.
+Use the command below to install it with [Composer](http://getcomposer.org/) to the current `$PWD`.
 
 ```
 composer require hashworks/phergie-user-watch-plugin
@@ -20,7 +20,7 @@ See Phergie documentation for more information on
 
 ## Configuration Examples
 
-The configuration allows you to set up to 3 callbacks: joinCallback, partCallback and quitCallback. Bellow are some examples.
+The configuration allows you to set up to 3 callbacks: joinCallback, partCallback and quitCallback. Below are some examples.
 
 ```php
 // Simple example, give voice to every user who joins the channel.
